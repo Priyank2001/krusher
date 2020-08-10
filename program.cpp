@@ -127,6 +127,7 @@ class reser{
 //void admin();
 //void user();
 void enquiry();
+void displaypassdetail();
 void reserve();
 void cancell();
 void res();
@@ -150,6 +151,7 @@ void admin(){
           cout<<"3.\tDisplay Details\n";
           cout<<"4.\tPassenger Details\n";
           cout <<"5.\tUser Management Menu\n";
+          cout <<"6.\tExit\n";
 
           cout<< "Enter your choice\n";
           int ch;
@@ -178,9 +180,9 @@ void admin(){
                 a.details();
                 f.write((char *) & a,sizeof(a));
                 f.close();
-
-                break;
                 admin();
+                break;
+                
 
                     }
                 case 3 :
@@ -192,15 +194,18 @@ void admin(){
                     a.displaydetail();
                 }
                 f.close();
+                admin();
                 break;
                     }
                 case 4 :
                     {
-                        
+                        displaypassdetail();
                     }
                 case 5 :{
                     manage();
                 }
+                case 6 :
+                  exit(0);
 
              }
       }
@@ -449,6 +454,9 @@ void manage(){
             }
             f.close();
             break;
+        case 4 :
+           admin();
+           break;
         }
     }
     while(ch<=3);
