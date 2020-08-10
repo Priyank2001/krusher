@@ -69,12 +69,12 @@ class reser{
     public:
     int pnr;
     int train_no;
-    string train_name;
-    string boarding_point;
-    string destination;
-    vector<string> pname;
+    char train_name[100];
+    char boarding_point[100];
+    char destination[100];
+    vector<char *> pname;
     int age[20];
-    string clas;
+    char clas[10];
     int nosr;  //Number of seats required
     int i ;
     int d,m,y;
@@ -87,24 +87,24 @@ class reser{
         cout<<"Train no:";
         cin>>train_no;
         cout<<"Train name:";
-        getline(cin,train_name);
+        cin >> train_name;
         cout<<"Boarding point:";
-        getline(cin,boarding_point);
+        cin>>boarding_point;
         cout<<"Destination pt:";
-        getline(cin,destination);
+        cin>>destination;
         cout<<"No of seats required:";
         cin>>nosr;
         for(i=0; i<nosr ; i++)
         {
             cout<<"Passenger name:";
-            string v1;
-            getline(cin,v1);
+            char v1[50];
+            cin>>v1;
             pname.push_back(v1);
             cout<<"Passenger age:";
             cin>>age[i];
         }
-    //    cout<<"Enter the class f-first class s-second class:";
-    //    getline(cin,clas);
+     cout<<"Enter the class f-first class s-second class:";
+     cin >> clas ;
         cout<<"Date of travel:";
         cin>>d>>m>>y;
      //   cout<<"Enter the concession category\n";
@@ -113,11 +113,21 @@ class reser{
      //   cin>>con;
      //   cout<<"............END OF GETTING DETAILS............\n";
     }
+    int amount = 0;
+    void display_data(){
+        cout<<train_no<<"\t"<<train_name<<"\t"<<boarding_point<<"\t"<<destination<<"\t";
+
+
+         cout<< "\n"; 
+    }
+
+
 };
 
 //void admin();
 //void user();
 void enquiry();
+void displaypassdetail();
 void reserve();
 void cancell();
 void res();
@@ -139,7 +149,8 @@ void admin(){
           cout<<"1.\tCreate Database\n";
           cout<<"2.\tAdd Details\n";
           cout<<"3.\tDisplay Details\n";
-          cout<<"4.\tPassenger Details\n\n\n";
+          cout<<"4.\tPassenger Details\n";
+          cout <<"5.\tUser Management Menu\n";
 
           cout<< "Enter your choice\n";
           int ch;
@@ -168,7 +179,10 @@ void admin(){
                 a.details();
                 f.write((char *) & a,sizeof(a));
                 f.close();
+                admin();
                 break;
+                
+
                     }
                 case 3 :
                     {
@@ -183,8 +197,11 @@ void admin(){
                     }
                 case 4 :
                     {
-
+                        displaypassdetail();
                     }
+                case 5 :{
+                    manage();
+                }
 
              }
       }
@@ -213,12 +230,12 @@ void user(){
     
 
     cout<<"\tPlease Enter your ID\n";
-    cin >>  id;
+   cin >>  id;
     cout<<"\tPLease enter your password\n";
     cin >> password;
 
     while(f.read((char *) & a,sizeof(a)))
-    {if(strcmp(a.id,id) != 0 && strcmp(a.pass,password)!=0)
+ {if(strcmp(a.id,id) != 0 && strcmp(a.pass,password)!=0)
       {
         cout<<"1.Reserve\n2.Cancell\n3.Enquiry\n4.Return to the main menu\n";
                 cout<<"Enter your choice:";
@@ -249,17 +266,16 @@ void user(){
                       
                   }
       }
-    else
-    {
+  else
+   {
         cout << "Wrong Credentials\n";
          goto h;
     }
-    }
-
-    
-h:
-;
+   h:
+   ;} 
 }
+    
+
 
 
 
@@ -289,32 +305,156 @@ void res(){
     reser y;
     
     fstream f1,f2;
-
+    time_t t;
     f1.open("t.txt",ios::in|ios::binary);
     f2.open("p.txt",ios::in|ios::binary|ios::app);
     
     y.getresdet();
     
+    int r_class1 = x.clss1 ;
+
+    int r_class2 = x.clss2 ;
+    char a[10] = "f";
+    char b[10] = "s" ;
 
     while(f1.read((char *)& x, sizeof(x) ))
       {
          if(x.train_no == y.train_no)
            {
-                if(x.clss1 >= y.nosr)
+                if(strcmp(y.clas,a) == 0)
+                {
+                if(x.clss1 >= y.nosr  && x.clss1 > 0)
                   {
-                      
+                     x.clss1 -= y.nosr;
+                     f1.write((char*) & x.clss1, sizeof(x.clss1));
+                     srand((unsigned) time(&t));
+                     y.pnr = rand();
+                     
+                     y.amount += y.nosr*x.clss1_fare;
+                     f2.write((char*) & y, sizeof(y));
+                     y.display_data();
+                     cout<<"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
+
+                     cout<<"~~~~~~~~~~~~~~~~~~~~~~~~~~~Reservation is Completed~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
+                     cout<<"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
+
                   }
+                  else if(strcmp(y.clas,b) == 0)
+                  {
+                     if(y.nosr <= x.clss2 && x.clss2>0)
+                       {
+                           x.clss2 -= y.nosr;
+                           f1.write((char* ) & x.clss2,sizeof(x.clss2));
+                           srand((unsigned) time(&t));
+                           y.pnr = rand();
+                           y.amount += y.nosr * x.clss2_fare ;
+                           f2.write((char *) & y , sizeof(y));
+                           y.display_data();
+                            cout<<"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
+
+                     cout<<"~~~~~~~~~~~~~~~~~~~~~~~~~~~Reservation is Completed~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
+                     cout<<"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
+
+                       }
+
+                       else
+                       {
+                            cout << "Sorry!!!!!!!!\n No seats Available";
+                       }
+                       
+
+                }
            }
       }
 
+         else
+         {
+               cout << "\n \t Wrong Train Number";
+         }
+
+
+    f1.close();
+    f2.close()  ;
 
 }
-
+}
 
 void cancell(){;}
 
-void enquiry(){;}
+void enquiry(){
+    
+    fstream f;
+    f.open("t.txt",ios::in|ios::out|ios::binary);
+    detail a;
+    while(f.read((char *) & a,sizeof(a)))
+    {
+        a.displaydetail();
+    }
+    getch();
+}
 
+void displaypassdetail(){
+    fstream f;
+    reser b;
+    f.open("p.txt",ios::in|ios::out|ios::binary);
+    f.seekg(0);
+    while(f.read((char *) & b,sizeof(b)))
+    {
+        b.display_data();
+    }
+    f.close();
+    getch();
+}
+
+void manage(){
+        int ch;
+    fstream f;
+    char c;
+    login a;
+    cout<<".........WELCOME TO THE USER MANAGEMENT MENU........\n";
+    do
+    {
+        cout<<"1.Create id data base\n2.Add details\n";
+        cout<<"3.Display details\n4.Return to the main menu\n";
+        cout<<"Enter your choice:";
+        cin>>ch;
+        cout<<endl;
+        switch(ch)
+        {
+        case 1:
+            f.open("id.txt",ios::out|ios::binary);
+            do
+            {
+                a.getid();
+                f.write((char *) & a,sizeof(a));
+                cout<<"Do you want to add one more record\n";
+                cout<<"y-Yes\nn-No\n";
+                cin>>c;
+            }
+            while(c=='y');
+            f.close();
+            break;
+        case 2:
+            f.open("id.txt",ios::in|ios::out|ios::binary|ios::app);
+            a.getid();
+            f.write((char *) & a,sizeof(a));
+            f.close();
+            break;
+        case 3:
+            f.open("id.txt",ios::in|ios::out|ios::binary);
+
+            f.seekg(0);
+            while(f.read((char *) & a,sizeof(a)))
+            { 
+                a.display();
+            }
+            f.close();
+            break;
+        }
+    }
+    while(ch<=3);
+    getch();
+}
 
 int main(){
     
