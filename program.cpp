@@ -178,7 +178,10 @@ void admin(){
                 a.details();
                 f.write((char *) & a,sizeof(a));
                 f.close();
+
                 break;
+                admin();
+
                     }
                 case 3 :
                     {
