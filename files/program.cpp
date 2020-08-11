@@ -151,6 +151,7 @@ void admin(){
           cout<<"3.\tDisplay Details\n";
           cout<<"4.\tPassenger Details\n";
           cout <<"5.\tUser Management Menu\n";
+          cout <<"6.\tExit\n";
 
           cout<< "Enter your choice\n";
           int ch;
@@ -193,6 +194,7 @@ void admin(){
                     a.displaydetail();
                 }
                 f.close();
+                admin();
                 break;
                     }
                 case 4 :
@@ -202,6 +204,8 @@ void admin(){
                 case 5 :{
                     manage();
                 }
+                case 6 :
+                  exit(0);
 
              }
       }
@@ -450,6 +454,9 @@ void manage(){
             }
             f.close();
             break;
+        case 4 :
+           admin();
+           break;
         }
     }
     while(ch<=3);
@@ -490,6 +497,7 @@ int main(){
 
  return 0;
 }
+
 
 
 
